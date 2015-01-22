@@ -1,10 +1,11 @@
 #!/bin/sh
 
 # Totally ripped off Thoughtbot's Laptop script (https://github.com/thoughtbot/laptop)
+# Terminus font: https://gist.github.com/creaktive/5004950
+# to run sh mac 2>&1 | tee setup.log
 
 fancy_echo() {
   local fmt="$1"; shift
-
   # shellcheck disable=SC2059
   printf "\n$fmt\n" "$@"
 }
@@ -124,9 +125,22 @@ fancy_echo "Configuring Bundler ..."
   bundle config --global jobs $((number_of_cores - 1))
 
 brew_install_or_upgrade 'weechat' '--with-python --with-perl'
+brew_install_or_upgrade 'bash'
+brew_install_or_upgrade 'plan9port'
+brew_install_or_upgrade 'emacs' '--use-git-head --cocoa -srgb'
+brew_install_or_upgrade 'ssh-copy-id'
+brew_install_or_upgrade 'coreutils'
+brew_install_or_upgrade 'curl'
+brew_install_or_upgrade 'geoip'
+brew_install_or_upgrade 'jq'
+brew_install_or_upgrade 'pass'
+brew_install_or_upgrade 'fish'
+
+brew_tap 'phinze/homebrew-cask'
 brew_tap 'caskroom/cask'
 brew_install_or_upgrade 'brew-cask'
 
+brew cask install xquartz
 brew cask install google-chrome
 brew cask install rdio
 brew cask install alfred
@@ -136,3 +150,13 @@ brew cask install virtualbox
 brew cask install vagrant
 brew cask install iterm2
 brew cask install vlc
+brew cask install slate
+# brew cask install keyremap4macbook
+brew cask install karabiner
+brew cask install keyboard-maestro
+
+if [ ! -d "$HOME/.dotfiles" ]; then
+  git clone https://github.com/thcipriani/dotfiles.git "$HOME/.dotfiles"
+  cd "$HOME/.dotfiles" && ./bootstrap.rb
+   . "$HOME/.dotfiles/osx"
+fi
